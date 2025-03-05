@@ -260,8 +260,9 @@ Creazione di elenco dei file ordinato per dimensione decrescente
 
 **Lezione 28** (11/2/25)
 
+Istruzione `type` all'interno del metodo `__eq__`
 Invocazione comandi della shell da python con `subprocess.run`.
-Ricerca di file duplicati in python utilizzando il comando `cmp`. 
+Ricerca di file duplicati in python utilizzando il comando della shell  `cmp`. 
 Utilizzo della classe `Miofile` per memorizzare le informazioni relative a un singolo file.
 
 
@@ -269,20 +270,56 @@ Utilizzo della classe `Miofile` per memorizzare le informazioni relative a un si
 
 **Lezione 29** (13/2/25)
 
-Ancora su esplorazione del filesystem. 
-
-
+Parametri posizionali e keyword. Uso di `*` e `**` per funzioni con numero arbitrario di parametri.
+Ancora su esplorazione del filesystem: ricerca basata sul tempo di ultima modifica e uso di espressioni regolari.
 
 ---
 
 **Lezione 30** (18/2/25)
 
-Esercitazione in aula su python 
+Introduzione ai thread in C. 
+Esercitazione in aula su python (testo disponibile su moodle). 
+
 
 
 ---
 
-** Lezione 31** (20/2/25)
+**Lezione 31** (20/2/25)
 
-Prova in itinere su python 
+Ancora sui thread in C. Uso di mutex.  
+Prova in itinere sull'uso di python per l'esplorazione del filesystem (testo disponibile su moodle).
 
+
+Nota: potete osservare che il prototipo della funzione `pthread_mutex_init` contiene il modificatore `restrict`. Si tratta di un modificatore riferibile ai puntatori che se usato permette al compilatore di generare del codice più efficiente. Potete trovare ulteriori dettagli ed esempi su [stack overflow](https://stackoverflow.com/questions/745870/realistic-usage-of-the-c99-restrict-keyword).
+
+
+
+----
+
+**Lezione 32** (25/2/25)
+
+Uso delle funzioni in `xerrori.c` per la gestione degli errori, compresa la relativa impostazione del `makefile`.
+Semafori  e loro uso per implementare la tecnica produttori e consumatori.
+
+
+----
+
+**Lezione 33** (27/2/25)
+
+Altri esempi di uso dei semafori. Esercitazione in aula sul sorting parallelo
+
+
+----
+
+**Lezione 34** (4/4/25)
+
+
+Uso di `pthread_barrier`, compilazione condizionale con `#if/#else/#endif`.
+Uso di target multipli nel makefile, e definizione di costanti dalla linea di comandi 
+(vedi uso di `-D USE_BARRIER` per ottenere `primi_barrier.o`)
+Soluzione esercitazione del 27/2 sul sorting parallelo.
+
+---
+
+
+**Lezione 35** (6/4/25)
