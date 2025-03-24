@@ -5,6 +5,8 @@
 
 
 // termina un processo con eventuale messaggio d'errore
+// si noti che la variabile errno è "thread local"
+// quindi ne esiste una diversa per ogni thread  
 void termina(const char *messaggio) {
   if(errno==0)  fprintf(stderr,"== %d == %s\n",getpid(), messaggio);
   else fprintf(stderr,"== %d == %s: %s\n",getpid(), messaggio,
@@ -13,6 +15,8 @@ void termina(const char *messaggio) {
 }
 
 // termina un processo con eventuale messaggio d'errore + linea e file
+// si noti che la variabile errno è "thread local"
+// quindi ne esiste una diversa per ogni thread  
 void xtermina(const char *messaggio, int linea, char *file) {
   if(errno==0)  fprintf(stderr,"== %d == %s\n",getpid(), messaggio);
   else fprintf(stderr,"== %d == %s: %s\n",getpid(), messaggio,

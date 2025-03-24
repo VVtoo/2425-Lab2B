@@ -1,6 +1,6 @@
-// Algoritmo Mergesort che sfrutta la notazione &a[n1] per ottenere 
-// il puntatore all'inizio dell'array contenente al seconda metà
-// dell'input.
+// esempio di sorting parallelo dove le due metà dell'array di input
+// vengono ordinate da thread diversi. Il merge finale
+// viene effettuato dal thread principale usando la funzione merge()
 
 #define _GNU_SOURCE   // avverte che usiamo le estensioni GNU 
 #include <stdio.h>    // permette di usare scanf printf etc ...
@@ -10,13 +10,24 @@
 #include <string.h>   // funzioni per stringhe
 #include "xerrori.h"
 
-
-
 // prototipi delle funzioni che appaiono dopo il main()
 void merge(int a[], int na, int c[], int nc, int b[]);
 int *random_array(int n, int seed);
 int intcmp(const void *a, const void *b);
 
+// struct contenente la descrizione di un array
+typedef struct {
+  int *a;  // indirizzo array
+  int m;   // dimensione array 
+} array;
+
+// funzione eseguita dal thread ausiliario
+void *tbody(void *arg)
+{  
+  array *d = (array *)arg; 
+  qsort(d->a, d->m, sizeof(int), &intcmp);
+  pthread_exit(NULL);
+} 
 
 // ordina gli interi passati sulla linea di comando
 int main(int argc, char *argv[])
@@ -34,8 +45,32 @@ int main(int argc, char *argv[])
   for(int i=0;i<n;i++) somma += a[i];
   
   // esegue l'ordinamento
-  qsort(a,n,sizeof(int),&intcmp);
-  
+  // creiamo i due array di lunghezza n/2 circa 
+  if(n>1) {
+    // se n==1 l'array è ordinato
+    int n1 = n/2;
+    int n2 = n-n1;
+    int *a1 = malloc(n1*sizeof(int));  
+    int *a2 = malloc(n2*sizeof(int));
+    assert(a1!=NULL && a2!=NULL);
+    // copio gli elementi a[] -> a1[] e a[2]
+    for(int i=0;i<n1;i++) 
+      a1[i] = a[i];   // prima metà 
+    for(int i=0;i<n2;i++) 
+      a2[i] = a[i+n1];   // seconda metà 
+    // preparo il lancio per il thread ausiliario     
+    array d;
+    d.a = a2; d.m = n2;
+    pthread_t t;
+    // eseguo il lancio dell'ordinamento della seconda metà
+    xpthread_create(&t,NULL,tbody,&d,__LINE__,__FILE__);
+    // in parallelo ordino la prima metà
+    qsort(a1,n1,sizeof(int),&intcmp);
+    xpthread_join(t,NULL,__LINE__,__FILE__);
+    // merge delle due metà
+    merge(a1, n1, a2, n2, a);
+    free(a1); free(a2);
+  }
   // controlla ordinamento
   long somma2 = a[0];
   for(int i=1;i<n;i++) {
@@ -51,26 +86,19 @@ int main(int argc, char *argv[])
   }
   else 
     puts("Array ordinato e somma mantenuta, sorting probabilmente OK");
-    
-  
+
   // dealloco l'array e termino
   free(a);   
   return 0;
 }
 
 
-
-
 // funzione per il merge di due array in un terzo array già allocato
 // merge di a[0...n1-1] e c[0... n2-1] dentro b[]
-// Soluzione proposta da co-pilot apparentemente corretta
 void merge(int a[], int na, int c[], int nc, int b[])
 {
-  assert(a!=NULL);
-  assert(c!=NULL);
-  assert(b!=NULL);
-  assert(na>0);
-  assert(nc>0);
+  assert(a!=NULL && c!=NULL && b!=NULL);
+  assert(na>0 && nc>0);
   
   int i=0; // indice per a[]
   int j=0; // indice per c[]
