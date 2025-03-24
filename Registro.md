@@ -311,15 +311,76 @@ Altri esempi di uso dei semafori. Esercitazione in aula sul sorting parallelo
 
 ----
 
-**Lezione 34** (4/4/25)
+**Lezione 34** (4/3/25)
 
 
 Uso di `pthread_barrier`, compilazione condizionale con `#if/#else/#endif`.
-Uso di target multipli nel makefile, e definizione di costanti dalla linea di comandi 
+Uso di target multipli nel makefile, e definizione di costanti dalla linea di comando 
 (vedi uso di `-D USE_BARRIER` per ottenere `primi_barrier.o`)
 Soluzione esercitazione del 27/2 sul sorting parallelo.
 
+
 ---
 
+**Lezione 35** (6/3/25)
 
-**Lezione 35** (6/4/25)
+Paradigma produttori-consumatori con produttori e consumatori multipli.
+Mergesort parallelo (`pmergesort.c`).
+
+
+----
+
+**Lezione 36** (11/3/25)
+
+
+Introduzione alle Condition Variables. Esempi per la gestione della memoria condivisa (`heap.c`), e la gestione di readers e writers (`rw.c`).
+
+
+
+-----
+
+**Lezione 37** (13/3/25)
+
+Ancora su gestione readers e writers. Uso di condition variables per schemi produttori consumatori (`somma_primi_files.c`), confronto con l'uso dei semafori (`pctest.c` con relative istruzioni nel `makefile`). Uso di condition variables per emulazione dei semafori (`zem.c`). Cenni all'uso della threads library (`thrd_create`, `thrd_join`, etc) in alternativa ai POSIX threads (pthread). Consiglio di consultare [questo libro](https://gustedt.gitlabpages.inria.fr/modern-c/) come riferimento avanzato al C,  e in particolare (Capitolo 20) alle funzioni della threads library.  
+
+
+-----
+
+
+**Lezione 38** (18/3/25)
+
+
+Creazione di processi in C: comando `fork`.
+Comandi `wait` e `sleep`, processi zombie. 
+Comandi del terminale per monitare i processi: `ps`, `htop`, e `kill`
+Esecuzione di processi in background con `&` 
+Concetto di pipe per la comunicazione fra processi, esempio `contaprimi.c` 
+Documentazione sulle pipe, pagine: `pipe(2)` e `pipe(7)`.
+
+-----
+
+
+**Lezione 39** (20/3/25)
+
+Comandi `mkfifo(1)` e `mkfifo(3)`.  
+Comunicazione tra processi mediante named pipe (anche in Python) con riferimento a `pipe(7)`, `fifo(7)`. 
+Lancio di un nuovo eseguibile mediante `fork` seguito da `execl`.
+Introduzione all'uso della memoria condivisa con riferimento a `shm_overview(7)`
+Uso e significato di `shm_open`, `ftruncate`, `mmap`, `munmap`, `shm_unlink`.
+
+
+-----
+
+
+**Lezione 40** (25/3/25)
+
+Utilizzo dei named semaphore per la sincronizzazione di processi, con ricerimento a `sem_overview(7)`. Esempio schema produttori consumatori tra processi, sorgenti `shm_prod.c` e `shm_cons.c`.
+
+Introduzione ai segnali con riferimento a `signal(7)`. Comando `kill(1)`. 
+Utilizzo di `sigaction` per definire un handler. 
+
+
+
+---- 
+
+**Lezione 41** (27/3/25)

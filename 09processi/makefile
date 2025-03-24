@@ -2,7 +2,7 @@
 # che vengono usate dalle regole implicite
 CC=gcc
 CFLAGS=-std=c11 -Wall -g -O -pthread
-LDLIBS=-lm -pthread
+LDLIBS=-lm -pthread -lrt
 
 
 # su https://www.gnu.org/software/make/manual/make.html#Implicit-Rules
@@ -16,36 +16,31 @@ LDLIBS=-lm -pthread
 #  $^ viene sostituito con tutti i prerequisiti
 
 # elenco degli eseguibili da creare
-EXECS=contaprimi.out tabella_primi.out primi_file.out threadSort.out somma_primi_files.out pmergesort.out
+EXECS=moria.out contaprimi.out scrittore.out lettore.out shm0.out shm_prod.out shm_cons.out
 
 # primo target: gli eseguibili sono precondizioni
 # quindi verranno tutti creati
 all: $(EXECS) 
 
-# secondo target che genera gli eseguibili primi_files e primi_barrier
-# viene invocato invece di all se si scrive 
-# "make primi" sulla linea di comando
-primi: primi_barrier.out primi_files.out
-
-
 # regola per la creazione degli eseguibili utilizzando xerrori.o
 %.out: %.o xerrori.o
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-# regola per la creazione di file oggetto che dipendono da xerrori.h
+# pattern rule che esprime che tutti i .o dipendono da xerrori.h
 %.o: %.c xerrori.h
-	$(CC) $(CFLAGS) -c $<
 
-primi_barrier.o:  primi_files.c xerrori.h  
-	$(CC) $(CFLAGS) -o $@ -c $< -D USE_BARRIER
- 
- 
+
 # esempio di target che non corrisponde a una compilazione
 # ma esegue la cancellazione dei file oggetto e degli eseguibili
 clean: 
-	rm -f *.o $(EXECS)
+	rm *.o $(EXECS)
 	
 # crea file zip della lezione	
 zip:
-	zip threads.zip *.c *.h *.py makefile
+	zip processi.zip *.c *.h makefile
+
+	
+	
+	
+	
 

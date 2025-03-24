@@ -2,7 +2,7 @@
 # che vengono usate dalle regole implicite
 CC=gcc
 CFLAGS=-std=c11 -Wall -g -O -pthread
-LDLIBS=-lm -pthread
+LDLIBS=-lm -lrt -pthread
 
 
 # su https://www.gnu.org/software/make/manual/make.html#Implicit-Rules
@@ -16,16 +16,14 @@ LDLIBS=-lm -pthread
 #  $^ viene sostituito con tutti i prerequisiti
 
 # elenco degli eseguibili da creare
-EXECS=contaprimi.out tabella_primi.out primi_file.out threadSort.out somma_primi_files.out pmergesort.out
+EXECS=heap.out rw.out somma_primi_files.out
 
-# primo target: gli eseguibili sono precondizioni
+# primo target: gli eseguibili sono precondizioni del target
 # quindi verranno tutti creati
 all: $(EXECS) 
 
-# secondo target che genera gli eseguibili primi_files e primi_barrier
-# viene invocato invece di all se si scrive 
-# "make primi" sulla linea di comando
-primi: primi_barrier.out primi_files.out
+# dove versioni di prod/con con semafori oppure condvar
+pctests: pctest.out pctestCV.out
 
 
 # regola per la creazione degli eseguibili utilizzando xerrori.o
@@ -36,16 +34,19 @@ primi: primi_barrier.out primi_files.out
 %.o: %.c xerrori.h
 	$(CC) $(CFLAGS) -c $<
 
-primi_barrier.o:  primi_files.c xerrori.h  
-	$(CC) $(CFLAGS) -o $@ -c $< -D USE_BARRIER
- 
- 
+# compila pctest.c con opzione -O3 per ottimizzare la velocità 
+pctest.o: pctest.c xerrori.h
+	$(CC) $(CFLAGS) -O3 -c $< 
+
+# come sopra ma definisce la costante USACV quindi vengono
+# usate le CV invece dei semafori nel paradigma prod-cons
+pctestCV.o: pctest.c xerrori.h
+	$(CC) $(CFLAGS) -O3 -c $<  -o $@ -DUSACV
+
+
 # esempio di target che non corrisponde a una compilazione
 # ma esegue la cancellazione dei file oggetto e degli eseguibili
 clean: 
-	rm -f *.o $(EXECS)
-	
-# crea file zip della lezione	
-zip:
-	zip threads.zip *.c *.h *.py makefile
+	rm -f *.o $(EXECS) pctest.out pctestCV.out
+
 
